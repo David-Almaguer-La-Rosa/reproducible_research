@@ -4,9 +4,10 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
 library(tidyverse)
 library(kableExtra)
+library(knitr)
 ```
 
 # Introducción
@@ -24,3 +25,29 @@ threats <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/ti
 ## Datos de Suramérica
 
 El número de especies que hay en Suramérica en la base de datos es de `r plants %>% dplyr::filter(continent=="South America") %>% nrow()` especies.
+
+```{r}
+data("msleep")
+Tabla <- msleep %>% 
+  group_by(vore) %>% 
+  summarise_at("sleep_total",.funs = list(Mean = mean, SD = sd)) %>%
+  dplyr::filter(!is.na(vore)) %>% 
+  arrange(desc(Mean))
+
+kable(Tabla,digits = 2) %>% kable_styling(bootstrap_options = c("striped", 
+    "hover", "condensed"),full_width = FALSE)
+```
+
+```{r}
+msleep_long <- msleep %>% dplyr::select(name, vore, 
+    sleep_total, brainwt)
+
+kable(msleep_long, digits = 2, caption = "La base de datos entera") %>% 
+    kable_styling(bootstrap_options = c("striped", 
+        "hover", "condensed"), full_width = F) %>% 
+    scroll_box(width = "800px", height = "200px")
+```
+
+
+
+
